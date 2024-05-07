@@ -1,60 +1,46 @@
-from scipy.io.wavfile import write, read
-import numpy as np
-from scipy.fft import *
-import librosa
+import soundEncrypt
+import customtkinter
+import errorBox
 
-menu = -1
-def encrypt():
-    message = input('message: ')
-    file = input('file: ')
-    samArr = np.array([])
-    samplerate = 44100
-    frList = list(message)
-    for i in frList:
-        t = np.linspace(0., 1., samplerate)
-        amplitude = np.iinfo(np.int16).max
-        data = amplitude * np.sin(2. * np.pi * ord(i) * 100 * t)
-        samArr = np.append(samArr, data.astype(np.int16))
-    samArr = samArr.astype(np.int16)
-    write(file, samplerate, samArr)
+# GUI setup
 
-def decrypt():
-    file = input('file: ')
-    def freq(file, start_time, end_time):
+class app(customtkinter.CTk):
+    def __init__(self):
+        super().__init__()
+        self.geometry('400x400')
+        self.title('Sound Encrypt')
+        self.command(self.mainMenu())
+
+    def mainMenu(self):
+        try:
+            for i in self.master.winfo_children():
+                i.destroy()
+        except:
+            errorBox.ErrorMessage(69)
+
+        self.encryptButton = customtkinter.CTkButton(self, command = self.encrypt())
+        self.encryptButton.grid(row=0, column=0, padx=20, pady=10)
+        self.encryptButton.configure(text='Encrypt')
+
+        self.dencryptButton = customtkinter.CTkButton(self, command = self.dencrypt())
+        self.dencryptButton.grid(row=1, column=0, padx=20, pady=10)
+        self.dencryptButton.configure(text='Dencrypt')
+
+    def encrypt(self):
+        try:
+            for i in self.master.winfo_children():
+                i.destroy()
+        except:
+            errorBox.ErrorMessage(69)
+    
+    def dencrypt(self):
+        try:
+            for i in self.master.winfo_children():
+                i.destroy()
+        except:
+            errorBox.ErrorMessage(69)
 
 
-        # Open the file and convert to mono
-        sr, data = read(file)
-        if data.ndim > 1:
-            data = data[:, 0]
-        else:
-            pass
-
-        # Return a slice of the data from start_time to end_time
-        dataToRead = data[int(start_time * sr / 1000): int(end_time * sr / 1000) + 1]
-
-        # Fourier Transform
-        N = len(dataToRead)
-        yf = rfft(dataToRead)
-        xf = rfftfreq(N, 1 / sr)
-
-
-        idx = np.argmax(np.abs(yf))
-        freq = xf[idx]
-        return freq
-
-    message = ''
-
-    for i in range(round(librosa.get_duration(path=file))):
-        frequency = freq(file, i * 1000, i * 1000 + 1000)
-        message += (chr(round((int(frequency)) / 100)))
-    return message
-
-while menu != 0:
-    menu = int(input('encrypt: 1'
-                 '\ndecrypt: 2'
-                 '\nexit: 0\n'))
-    if menu == 1:
-        encrypt()
-    elif menu == 2:
-        print(decrypt())
+if __name__ == '__main__':
+    app = app()
+    app.mainloop()
