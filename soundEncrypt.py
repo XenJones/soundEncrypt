@@ -15,7 +15,7 @@ def encrypt(message, file):
     samArr = samArr.astype(np.int16)
     write(file, samplerate, samArr)
 
-def decrypt(file):
+def decrypt(infile, outfile):
     def freq(file, start_time, end_time):
 
 
@@ -41,7 +41,8 @@ def decrypt(file):
 
     message = ''
 
-    for i in range(round(librosa.get_duration(path=file))):
-        frequency = freq(file, i * 1000, i * 1000 + 1000)
+    for i in range(round(librosa.get_duration(path=infile))):
+        frequency = freq(infile, i * 1000, i * 1000 + 1000)
         message += (chr(round((int(frequency)) / 100)))
-    return message
+    with open(outfile, 'w') as outfile:
+        outfile.write(message)
