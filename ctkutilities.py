@@ -2,7 +2,7 @@ import customtkinter
 
 
 class MessageBox(customtkinter.CTkToplevel):
-    def __init__(self, master, title, message_text, button_text):
+    def __init__(self, master, title, message_text, button_text, Lock = None):
         super().__init__()
         self.geometry('400x100')
         self.title(title)
@@ -18,5 +18,6 @@ class MessageBox(customtkinter.CTkToplevel):
             self.button = customtkinter.CTkButton(self, text=button_text, command=self.destroy)
             self.button.grid(column=0, row=1, padx=10, pady=10)
 
-        self.transient(master)
-        self.grab_set()
+        if Lock:
+            self.transient(master)
+            self.grab_set()
